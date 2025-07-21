@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class StmtParser {
     private final List<Token> tokens;
     private int current;
@@ -47,12 +49,24 @@ public class StmtParser {
     }
 
     private Stmt parseStatement() {
+        if(match(TokenType.LEFT_BRACE))return new Stmt.Block(block());
         ExprParser exprParser = new ExprParser(tokens, current);
         Expr expr = exprParser.parse();
         current = exprParser.getCurrent();
         consume(TokenType.SEMICOLON, "Expect ';' after expression.");
         return new Stmt.Expression(expr);
     }
+
+    private List<Stmt> block() {
+        List<Stmt> statements=new ArrayList<>();
+
+        while(!check(TokenType.RIGHT_BRACE) && !isAtEnd()){
+            statements.add(parseDeclaration());
+        }
+        consume(TokenType.RIGHT_BRACE, "Expect '}' after block.");
+        return statements;
+    }
+
 
     private boolean match(TokenType... types) {
         for (TokenType type : types) {

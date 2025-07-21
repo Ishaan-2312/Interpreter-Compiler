@@ -4,12 +4,15 @@ package StmtParser;
 import ExprParser.Expr;
 import Lexer.Token;
 
+import java.util.List;
+
 public interface Stmt {
      <R> R accept(Visitor<R> visitor);
 
      interface Visitor<R>{
          R visitExpressionStmt(Expression stmt);
          R visitVarStmt(Var stmt);
+         R visitBlockStmt(Block stmt);
      }
 
      class Expression implements Stmt{
@@ -39,4 +42,18 @@ public interface Stmt {
              return visitor.visitVarStmt(this);
          }
      }
+
+     class Block implements Stmt{
+         public final List<Stmt> statements;
+
+         public Block(List<Stmt> statements) {
+             this.statements = statements;
+         }
+
+         @Override
+         public <R> R accept(Visitor<R> visitor) {
+             return visitor.visitBlockStmt(this);
+         }
+     }
+
 }

@@ -23,6 +23,9 @@ public class Lexer {
         singleCharTokens.put('/', TokenType.SLASH);
         singleCharTokens.put('=', TokenType.EQUAL);
         singleCharTokens.put(';', TokenType.SEMICOLON);
+        singleCharTokens.put('{', TokenType.LEFT_BRACE);
+        singleCharTokens.put('}', TokenType.RIGHT_BRACE);
+
     }
 
     public Lexer(String source) {

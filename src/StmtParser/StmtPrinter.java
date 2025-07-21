@@ -3,7 +3,7 @@ package StmtParser;
 import ExprParser.ASTPrinter;
 
 public class StmtPrinter implements Stmt.Visitor<String> {
-    private final ASTPrinter exprPrinter = new ASTPrinter(); // Tu already bana chuka hai Expr ka printer
+    private final ASTPrinter exprPrinter = new ASTPrinter();
 
     public String print(Stmt stmt) {
         return stmt.accept(this);
@@ -18,6 +18,11 @@ public class StmtPrinter implements Stmt.Visitor<String> {
         }
         sb.append(")");
         return sb.toString();
+    }
+
+    @Override
+    public String visitBlockStmt(Stmt.Block stmt) {
+        return "";
     }
 
     @Override

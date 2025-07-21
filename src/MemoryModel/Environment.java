@@ -7,6 +7,16 @@ import java.util.TreeMap;
 
 public class Environment {
     public final Map<String,Object> memoryMap=new LinkedHashMap<>();
+    private final Environment enclosing;
+
+    public Environment() {
+        this.enclosing = null;
+    }
+
+    public Environment(Environment enclosing) {
+        this.enclosing = enclosing;
+    }
+
 
 
     public void define(String name,Object value){

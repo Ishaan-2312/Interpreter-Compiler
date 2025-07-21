@@ -29,17 +29,43 @@ public class Interpreter implements Expr.Visitor<Object> , Stmt.Visitor<Void> {
 
     @Override
     public Void visitVarStmt(Stmt.Var stmt) {
-       Object value=null;
+        Object value = null;
 
-       if(stmt.initializer!=null){
-           value = evaluate(stmt.initializer);
-       }
-       environment.define(stmt.name.lexeme,value);
+        if (stmt.initializer != null) {
+            value = evaluate(stmt.initializer);
+        }
 
-       return null;
+        environment.define(stmt.name.lexeme, value);
+        System.out.println("var " + stmt.name.lexeme + " = " + value);  // ✅ Debug line
+        return null;
 
 
     }
+
+    @Override
+    public Void visitBlockStmt(Stmt.Block stmt) {
+        executeBlock(stmt.statements, new Environment(environment));
+        return null;
+    }
+
+    private void executeBlock(List<Stmt> statements, Environment newEnv) {
+        Environment previous = this.environment;
+        try {
+            this.environment = newEnv;
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
+        } finally {
+            this.environment = previous;
+        }
+
+    }
+
+    private void execute(Stmt stmt) {
+        stmt.accept(this);
+    }
+
+
     private Object evaluate(Expr expr) {
         return expr.accept(this);
     }
