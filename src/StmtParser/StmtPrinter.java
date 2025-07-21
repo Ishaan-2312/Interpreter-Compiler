@@ -26,6 +26,11 @@ public class StmtPrinter implements Stmt.Visitor<String> {
     }
 
     @Override
+    public String visitIfBlock(Stmt.IfBlock stmt) {
+        return "";
+    }
+
+    @Override
     public String visitExpressionStmt(Stmt.Expression stmt) {
         return "(expr " + exprPrinter.print(stmt.expression) + ")";
     }

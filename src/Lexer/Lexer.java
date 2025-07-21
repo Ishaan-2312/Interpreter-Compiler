@@ -60,6 +60,14 @@ public class Lexer {
             case '\n':
                 line++;
                 break;
+            case '>':
+                addToken(TokenType.GREATER);
+                break;
+
+            case '<':
+                addToken(TokenType.LESS);
+                break;
+
             default:
                 if (isDigit(c)) {
                     number();

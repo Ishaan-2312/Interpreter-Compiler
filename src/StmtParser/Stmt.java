@@ -13,6 +13,7 @@ public interface Stmt {
          R visitExpressionStmt(Expression stmt);
          R visitVarStmt(Var stmt);
          R visitBlockStmt(Block stmt);
+         R visitIfBlock(IfBlock stmt);
      }
 
      class Expression implements Stmt{
@@ -53,6 +54,23 @@ public interface Stmt {
          @Override
          public <R> R accept(Visitor<R> visitor) {
              return visitor.visitBlockStmt(this);
+         }
+     }
+
+     class IfBlock implements Stmt{
+         public final Expr conditionExpr;
+         public final Stmt ifStmt;
+         public final Stmt elseStmt;
+
+         public IfBlock(Expr conditionExpr, Stmt ifStmt, Stmt elseStmt) {
+             this.conditionExpr = conditionExpr;
+             this.ifStmt = ifStmt;
+             this.elseStmt = elseStmt;
+         }
+
+         @Override
+         public <R> R accept(Visitor<R> visitor) {
+             return visitor.visitIfBlock(this);
          }
      }
 

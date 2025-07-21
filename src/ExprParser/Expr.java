@@ -12,6 +12,8 @@ public interface Expr {
         R visitLiteralExpr(Literal expr);
         R visitVariableExpr(Variable expr);
         R visitGroupingExpr(Grouping expr);
+        R visitAssignExpr(Assign expr);
+
     }
 
     class Binary implements Expr {
@@ -69,4 +71,20 @@ public interface Expr {
             return visitor.visitGroupingExpr(this);
         }
     }
+
+    class Assign implements Expr {
+        public final Token name;
+        public final Expr value;
+
+        public Assign(Token name, Expr value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
+            return visitor.visitAssignExpr(this);
+        }
+    }
+
 }

@@ -37,4 +37,9 @@ public class ASTPrinter implements Expr.Visitor<String>{
         return "";
     }
 
+    @Override
+    public String visitAssignExpr(Expr.Assign expr) {
+        return "";
+    }
+
 }

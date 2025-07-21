@@ -15,6 +15,9 @@ public class ExprParser {
         this.tokens = tokens;
         this.current = start;
     }
+    public ExprParser(List<Token> tokens){
+        this.tokens=tokens;
+    }
 
     public Expr parse() {
         return expression();
@@ -25,8 +28,27 @@ public class ExprParser {
     }
 
     private Expr expression() {
-        return addition();
+        return assignment(); // top level now becomes assignment
     }
+
+    private Expr assignment() {
+        Expr expr = comparison(); // first parse the left side
+
+        if (match(TokenType.EQUAL)) {
+            Token equals = previous();
+            Expr value = assignment(); // recursively support `a = b = 10`
+
+            if (expr instanceof Expr.Variable) {
+                Token name = ((Expr.Variable) expr).name;
+                return new Expr.Assign(name, value);
+            }
+
+            throw error(equals, "Invalid assignment target.");
+        }
+
+        return expr;
+    }
+
 
     private Expr addition() {
         Expr expr = multiplication();
@@ -39,6 +61,19 @@ public class ExprParser {
 
         return expr;
     }
+
+    private Expr comparison() {
+        Expr expr = addition();
+
+        while (match(TokenType.GREATER, TokenType.LESS)) {
+            Token operator = previous();
+            Expr right = addition();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
 
     private Expr multiplication() {
         Expr expr = primary();

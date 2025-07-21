@@ -29,6 +29,21 @@ public class Environment {
         throw new RuntimeException("Undefined variable '" + name + "'.");
     }
 
+    public void assign(String name, Object value) {
+        if (memoryMap.containsKey(name)) {
+            memoryMap.put(name, value);
+            return;
+        }
+
+        if (enclosing != null) {
+            enclosing.assign(name, value);
+            return;
+        }
+
+        throw new RuntimeException("Undefined variable '" + name + "'.");
+    }
+
+
 
 
 }

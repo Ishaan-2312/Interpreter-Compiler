@@ -2,7 +2,7 @@ package Lexer;
 
 public enum TokenType {
 
-    LEFT_PAREN, RIGHT_PAREN, PLUS, MINUS, STAR, SLASH, EQUAL, SEMICOLON,PRINT, RETURN,LEFT_BRACE, RIGHT_BRACE,
+    LEFT_PAREN, RIGHT_PAREN, PLUS, MINUS, STAR, SLASH, EQUAL, SEMICOLON,LEFT_BRACE, RIGHT_BRACE,
 
 
     // Literals
@@ -10,6 +10,11 @@ public enum TokenType {
 
     // Keywords
     VAR, IF, ELSE, FOR, WHILE,
+
+    //Conditionals
+    GREATER,
+    LESS,
+
 
     EOF
 }

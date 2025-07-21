@@ -2,6 +2,7 @@ package Interpreter;
 
 import ExprParser.Expr;
 import Lexer.Token;
+import Lexer.TokenType;
 import MemoryModel.Environment;
 import StmtParser.Stmt;
 
@@ -48,18 +49,36 @@ public class Interpreter implements Expr.Visitor<Object> , Stmt.Visitor<Void> {
         return null;
     }
 
-    private void executeBlock(List<Stmt> statements, Environment newEnv) {
+    @Override
+    public Void visitIfBlock(Stmt.IfBlock stmt) {
+        
+         Object result=evaluate(stmt.conditionExpr);
+        if(isTruthy(result)){
+            execute(stmt.ifStmt);
+        }
+        else if(stmt.elseStmt!=null)execute(stmt.elseStmt);
+        return null;
+    }
+
+    private boolean isTruthy(Object result) {
+        if (result == null) return false;
+        if (result instanceof Boolean) return (boolean) result;
+        return true;
+
+    }
+
+    public void executeBlock(List<Stmt> statements, Environment newEnv) {
         Environment previous = this.environment;
         try {
             this.environment = newEnv;
-            for (Stmt statement : statements) {
-                execute(statement);
+            for (Stmt stmt : statements) {
+                execute(stmt);
             }
         } finally {
             this.environment = previous;
         }
-
     }
+
 
     private void execute(Stmt stmt) {
         stmt.accept(this);
@@ -89,6 +108,15 @@ public class Interpreter implements Expr.Visitor<Object> , Stmt.Visitor<Void> {
             case SLASH:
                 checkNumberOperands(expr.operator, left, right);
                 return (double) left / (double) right;
+
+            case GREATER:
+                checkNumberOperands(expr.operator, left, right);
+                return (double) left > (double) right;
+
+            case LESS:
+                checkNumberOperands(expr.operator, left, right);
+                return (double) left < (double) right;
+
         }
 
         return null;
@@ -114,4 +142,14 @@ public class Interpreter implements Expr.Visitor<Object> , Stmt.Visitor<Void> {
     public Object visitGroupingExpr(Expr.Grouping expr) {
         return evaluate(expr.expression);
     }
+
+    @Override
+    public Object visitAssignExpr(Expr.Assign expr) {
+        Object value = evaluate(expr.value);
+//        System.out.println("ENV: " + environment.memoryMap);
+
+        environment.assign(expr.name.lexeme, value);
+        return value;
+    }
+
 }

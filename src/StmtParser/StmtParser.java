@@ -49,6 +49,7 @@ public class StmtParser {
     }
 
     private Stmt parseStatement() {
+        if (match(TokenType.IF)) return parseIfBlock();
         if(match(TokenType.LEFT_BRACE))return new Stmt.Block(block());
         ExprParser exprParser = new ExprParser(tokens, current);
         Expr expr = exprParser.parse();
@@ -56,6 +57,29 @@ public class StmtParser {
         consume(TokenType.SEMICOLON, "Expect ';' after expression.");
         return new Stmt.Expression(expr);
     }
+
+    private Stmt parseIfBlock() {
+        consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.");
+
+
+        ExprParser exprParser = new ExprParser(tokens, current);
+        Expr condition = exprParser.parse();
+        current = exprParser.getCurrent();
+
+        consume(TokenType.RIGHT_PAREN, "Expect ')' after if condition.");
+
+        Stmt thenBranch = parseStatement();
+        Stmt elseBranch = null;
+
+        if (match(TokenType.ELSE)) {
+            elseBranch = parseStatement();
+        }
+
+        return new Stmt.IfBlock(condition, thenBranch, elseBranch);
+    }
+
+
+
 
     private List<Stmt> block() {
         List<Stmt> statements=new ArrayList<>();
