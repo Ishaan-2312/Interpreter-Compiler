@@ -5,8 +5,7 @@ import Lexer.Token;
 import Lexer.TokenType;
 import ExprParser.ExprParser;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +48,7 @@ public class StmtParser {
     }
 
     private Stmt parseStatement() {
+        if(match(TokenType.FOR))return parseForBlock();
         if(match(TokenType.WHILE))return parseWhileBlock();
         if (match(TokenType.IF)) return parseIfBlock();
         if(match(TokenType.LEFT_BRACE))return new Stmt.Block(block());
@@ -68,6 +68,53 @@ public class StmtParser {
         Stmt whileBody=parseStatement();
         return new Stmt.WhileBlock(condition,whileBody);
     }
+
+    private Stmt parseForBlock(){
+        consume(TokenType.LEFT_PAREN,"Expect '(' after 'for'.");
+       Stmt initializer;
+       if(match(TokenType.SEMICOLON))initializer=null;
+       else if(match(TokenType.VAR))initializer=parseVarDeclaration();
+       else  initializer=parseExpressionStatement();
+      Expr condition=null;
+      if(!check(TokenType.SEMICOLON)){
+          ExprParser condParser = new ExprParser(tokens, current);
+          condition = condParser.parse();
+          current = condParser.getCurrent();
+      }
+        consume(TokenType.SEMICOLON, "Expect ';' after loop condition.");
+        Expr increment = null;
+        if (!check(TokenType.RIGHT_PAREN)) {
+            ExprParser incParser = new ExprParser(tokens, current);
+            increment = incParser.parse();
+            current = incParser.getCurrent();
+        }
+        consume(TokenType.RIGHT_PAREN, "Expect ')' after for clauses.");
+        Stmt body = parseStatement();
+        if (increment != null) {
+            body = new Stmt.Block(Arrays.asList(body, new Stmt.Expression(increment)));
+        }
+
+        if (condition == null) {
+            condition = new Expr.Literal(true); // infinite loop
+        }
+        body = new Stmt.WhileBlock(condition, body);
+        if (initializer != null) {
+            body = new Stmt.Block(Arrays.asList(initializer, body));
+        }
+
+        return body;
+
+
+    }
+
+    private Stmt parseExpressionStatement() {
+        ExprParser exprParser = new ExprParser(tokens, current);
+        Expr expr = exprParser.parse();
+        current = exprParser.getCurrent();
+        consume(TokenType.SEMICOLON, "Expect ';' after expression.");
+        return new Stmt.Expression(expr);
+    }
+
 
     private Stmt parseIfBlock() {
         consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.");

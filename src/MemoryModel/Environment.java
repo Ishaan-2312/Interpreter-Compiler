@@ -45,7 +45,7 @@ public class Environment {
             return;
         }
 
-        if (enclosing != null) {
+        else if (enclosing != null) {
             enclosing.assign(name, value); // ✅ assign in parent
             return;
         }

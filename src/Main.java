@@ -15,23 +15,23 @@ import Interpreter.Interpreter;
 
 public class Main {
     public static void main(String[] args) {
-        String source = ""
-                + "var a = 10;\n"
-                + "var b;\n"
-                + "\n"
-                + "if (a > 5) {\n"
-                + "  b = 1;\n"
-                + "} else {\n"
-                + "  b = 2;\n"
-                + "}\n"
-                + "\n"
-                + "var i = 0;\n"
-                + "while (i < 3) {\n"
-                + "  i = i + 1;\n"
-                + "  b = b + 1;\n"
-                + "}\n"
-                + "\n"
-                + "var res = b;\n";
+        String source =
+                "var i = 0;\n" +
+                        "for (var j = 0; j < 2; j = j + 1) {\n" +
+                        "  while (i < 3) {\n" +
+                        "    if (i < 2) {\n" +
+                        "      var low = i;\n" +
+                        "    } else {\n" +
+                        "      var high = i;\n" +
+                        "    }\n" +
+                        "    i = i + 1;\n" +
+                        "  }\n" +
+                        "  var step = j;\n" +
+                        "}\n" +
+                        "var done = i + 1;";
+
+
+
 
 
         Lexer lexer = new Lexer(source);
