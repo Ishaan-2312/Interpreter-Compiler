@@ -41,7 +41,7 @@ public class StmtParser {
         if (match(TokenType.EQUAL)) {
             ExprParser exprParser = new ExprParser(tokens, current);
             initializer = exprParser.parse();
-            current = exprParser.getCurrent(); // update current position
+            current = exprParser.getCurrent();
         }
 
         consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.");
@@ -49,6 +49,7 @@ public class StmtParser {
     }
 
     private Stmt parseStatement() {
+        if(match(TokenType.WHILE))return parseWhileBlock();
         if (match(TokenType.IF)) return parseIfBlock();
         if(match(TokenType.LEFT_BRACE))return new Stmt.Block(block());
         ExprParser exprParser = new ExprParser(tokens, current);
@@ -56,6 +57,16 @@ public class StmtParser {
         current = exprParser.getCurrent();
         consume(TokenType.SEMICOLON, "Expect ';' after expression.");
         return new Stmt.Expression(expr);
+    }
+
+    private Stmt parseWhileBlock() {
+        consume(TokenType.LEFT_PAREN,"Expect '(' after 'while'.");
+        ExprParser exprParser=new ExprParser(tokens,current);
+        Expr condition=exprParser.parse();
+        current=exprParser.getCurrent();
+        consume(TokenType.RIGHT_PAREN,"Expect ')' after condition.");
+        Stmt whileBody=parseStatement();
+        return new Stmt.WhileBlock(condition,whileBody);
     }
 
     private Stmt parseIfBlock() {

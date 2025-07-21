@@ -45,9 +45,10 @@ public class Interpreter implements Expr.Visitor<Object> , Stmt.Visitor<Void> {
 
     @Override
     public Void visitBlockStmt(Stmt.Block stmt) {
-        executeBlock(stmt.statements, new Environment(environment));
+        executeBlock(stmt.statements, new Environment(environment)); // Pass current as enclosing
         return null;
     }
+
 
     @Override
     public Void visitIfBlock(Stmt.IfBlock stmt) {
@@ -59,6 +60,23 @@ public class Interpreter implements Expr.Visitor<Object> , Stmt.Visitor<Void> {
         else if(stmt.elseStmt!=null)execute(stmt.elseStmt);
         return null;
     }
+
+    @Override
+    public Void visitWhileBlock(Stmt.WhileBlock stmt) {
+        while (isTruthy(evaluate(stmt.condition))) {
+            if (stmt.body instanceof Stmt.Block) {
+                // New environment nested in current
+                executeBlock(((Stmt.Block) stmt.body).statements, new Environment(environment));
+            } else {
+                // No new env needed
+                execute(stmt.body);
+            }
+        }
+        return null;
+    }
+
+
+
 
     private boolean isTruthy(Object result) {
         if (result == null) return false;
@@ -75,9 +93,11 @@ public class Interpreter implements Expr.Visitor<Object> , Stmt.Visitor<Void> {
                 execute(stmt);
             }
         } finally {
-            this.environment = previous;
+            this.environment = previous; // Restore outer environment
         }
     }
+
+
 
 
     private void execute(Stmt stmt) {

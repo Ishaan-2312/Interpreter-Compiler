@@ -20,12 +20,22 @@ public class Environment {
 
 
     public void define(String name,Object value){
+        System.out.println("ENV DEFINE: " + name + " = " + value + " in " + this);
 
-            memoryMap.put(name,value);
+
+        memoryMap.put(name,value);
     }
 
     public Object getValue(String name) {
-        if(memoryMap.containsKey(name)) return memoryMap.get(name);
+        if (memoryMap.containsKey(name)) {
+            System.out.println("ENV GET: " + name + " in " + this);
+            return memoryMap.get(name);
+        }
+
+        if (enclosing != null) {
+            return enclosing.getValue(name); // ✅ lookup in parent
+        }
+
         throw new RuntimeException("Undefined variable '" + name + "'.");
     }
 
@@ -36,12 +46,14 @@ public class Environment {
         }
 
         if (enclosing != null) {
-            enclosing.assign(name, value);
+            enclosing.assign(name, value); // ✅ assign in parent
             return;
         }
 
         throw new RuntimeException("Undefined variable '" + name + "'.");
     }
+
+
 
 
 

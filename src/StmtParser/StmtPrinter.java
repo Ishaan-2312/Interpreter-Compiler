@@ -31,6 +31,11 @@ public class StmtPrinter implements Stmt.Visitor<String> {
     }
 
     @Override
+    public String visitWhileBlock(Stmt.WhileBlock stmt) {
+        return "";
+    }
+
+    @Override
     public String visitExpressionStmt(Stmt.Expression stmt) {
         return "(expr " + exprPrinter.print(stmt.expression) + ")";
     }

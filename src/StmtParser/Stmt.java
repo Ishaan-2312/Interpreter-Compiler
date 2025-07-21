@@ -14,6 +14,7 @@ public interface Stmt {
          R visitVarStmt(Var stmt);
          R visitBlockStmt(Block stmt);
          R visitIfBlock(IfBlock stmt);
+         R visitWhileBlock(WhileBlock stmt);
      }
 
      class Expression implements Stmt{
@@ -71,6 +72,21 @@ public interface Stmt {
          @Override
          public <R> R accept(Visitor<R> visitor) {
              return visitor.visitIfBlock(this);
+         }
+     }
+
+     class WhileBlock implements Stmt{
+         public final Expr condition;
+         public final Stmt body;
+
+         public WhileBlock(Expr condition, Stmt body) {
+             this.condition = condition;
+             this.body = body;
+         }
+
+         @Override
+         public <R> R accept(Visitor<R> visitor) {
+             return visitor.visitWhileBlock(this);
          }
      }
 

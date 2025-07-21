@@ -15,16 +15,24 @@ import Interpreter.Interpreter;
 
 public class Main {
     public static void main(String[] args) {
-        String source="var a = 10;\n" +
-                "var b;\n" +
-                "\n" +
-                "if (a > 5) {\n" +
-                "  b = 1;\n" +
-                "} else {\n" +
-                "  b = 2;\n" +
-                "}\n" +
-                "\n" +
-                "var c = b + 1;\n";
+        String source = ""
+                + "var a = 10;\n"
+                + "var b;\n"
+                + "\n"
+                + "if (a > 5) {\n"
+                + "  b = 1;\n"
+                + "} else {\n"
+                + "  b = 2;\n"
+                + "}\n"
+                + "\n"
+                + "var i = 0;\n"
+                + "while (i < 3) {\n"
+                + "  i = i + 1;\n"
+                + "  b = b + 1;\n"
+                + "}\n"
+                + "\n"
+                + "var res = b;\n";
+
 
         Lexer lexer = new Lexer(source);
         List<Token> tokens = lexer.scanTokens();
