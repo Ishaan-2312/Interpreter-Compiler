@@ -48,6 +48,7 @@ public class StmtParser {
     }
 
     private Stmt parseStatement() {
+        if(match(TokenType.PRINT))return parsePrintStmt();
         if(match(TokenType.FOR))return parseForBlock();
         if(match(TokenType.WHILE))return parseWhileBlock();
         if (match(TokenType.IF)) return parseIfBlock();
@@ -57,6 +58,16 @@ public class StmtParser {
         current = exprParser.getCurrent();
         consume(TokenType.SEMICOLON, "Expect ';' after expression.");
         return new Stmt.Expression(expr);
+    }
+
+    private Stmt parsePrintStmt() {
+        consume(TokenType.LEFT_PAREN,"Expect '(' after 'print'.");
+        ExprParser exprParser=new ExprParser(tokens,current);
+        Expr expression=exprParser.parse();
+        current = exprParser.getCurrent();
+        consume(TokenType.RIGHT_PAREN,"Expect ')' after expression.");
+        consume(TokenType.SEMICOLON,"Expect ';' after print statement.");
+        return new Stmt.PrintStmt(expression);
     }
 
     private Stmt parseWhileBlock() {
@@ -74,8 +85,15 @@ public class StmtParser {
        Stmt initializer;
        if(match(TokenType.SEMICOLON))initializer=null;
        else if(match(TokenType.VAR))initializer=parseVarDeclaration();
-       else  initializer=parseExpressionStatement();
-      Expr condition=null;
+       else {
+           ExprParser exprParser = new ExprParser(tokens, current);
+           Expr expr = exprParser.parse();
+           current = exprParser.getCurrent();
+           consume(TokenType.SEMICOLON, "Expect ';' after initializer.");
+           initializer = new Stmt.Expression(expr);
+       }
+
+        Expr condition=null;
       if(!check(TokenType.SEMICOLON)){
           ExprParser condParser = new ExprParser(tokens, current);
           condition = condParser.parse();

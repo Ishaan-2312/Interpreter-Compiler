@@ -16,19 +16,28 @@ import Interpreter.Interpreter;
 public class Main {
     public static void main(String[] args) {
         String source =
-                "var i = 0;\n" +
-                        "for (var j = 0; j < 2; j = j + 1) {\n" +
-                        "  while (i < 3) {\n" +
-                        "    if (i < 2) {\n" +
-                        "      var low = i;\n" +
-                        "    } else {\n" +
-                        "      var high = i;\n" +
-                        "    }\n" +
-                        "    i = i + 1;\n" +
-                        "  }\n" +
-                        "  var step = j;\n" +
+                "var a = 5;\n" +
+                        "var b = 0;\n" +
+                        "\n" +
+                        "for (var i = 0; i < 3; i = i + 1) {\n" +
+                        "  b = b + i;\n" +
                         "}\n" +
-                        "var done = i + 1;";
+                        "\n" +
+                        "while (b < 10) {\n" +
+                        "  b = b + 1;\n" +
+                        "}\n" +
+                        "\n" +
+                        "if (b > 9) {\n" +
+                        "  print(b);\n" +
+                        "} else {\n" +
+                        "  print(0);\n" +
+                        "}";
+
+
+
+
+
+
 
 
 

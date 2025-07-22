@@ -15,6 +15,7 @@ public interface Stmt {
          R visitBlockStmt(Block stmt);
          R visitIfBlock(IfBlock stmt);
          R visitWhileBlock(WhileBlock stmt);
+         R visitPrintStmt(PrintStmt stmt);
      }
 
      class Expression implements Stmt{
@@ -87,6 +88,19 @@ public interface Stmt {
          @Override
          public <R> R accept(Visitor<R> visitor) {
              return visitor.visitWhileBlock(this);
+         }
+     }
+
+     class PrintStmt implements Stmt{
+        public final Expr expression;
+
+         public PrintStmt(Expr expression) {
+             this.expression = expression;
+         }
+
+         @Override
+         public <R> R accept(Visitor<R> visitor) {
+             return visitor.visitPrintStmt(this);
          }
      }
 

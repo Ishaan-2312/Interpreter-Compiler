@@ -25,6 +25,8 @@ public class Lexer {
         singleCharTokens.put(';', TokenType.SEMICOLON);
         singleCharTokens.put('{', TokenType.LEFT_BRACE);
         singleCharTokens.put('}', TokenType.RIGHT_BRACE);
+        singleCharTokens.put('%',TokenType.MODULO);
+
 
     }
 
@@ -67,13 +69,17 @@ public class Lexer {
             case '<':
                 addToken(TokenType.LESS);
                 break;
+            case '"': string(); break;
 
             default:
                 if (isDigit(c)) {
                     number();
                 } else if (isAlpha(c)) {
                     identifier();
-                } else {
+                }
+
+
+                else {
                     System.out.println("Unexpected character: " + c + " at line " + line);
                 }
         }
@@ -93,6 +99,15 @@ public class Lexer {
         addToken(type);
     }
 
+//    private void identifier() {
+//        while (isAlphaNumeric(peek())) advance();
+//
+//        String text = source.substring(start, current);
+//        TokenType type = keywords.getOrDefault(text, TokenType.IDENTIFIER);
+//        addToken(type);
+//    }
+
+
     // Keywords Map
     private static final Map<String, TokenType> keywords = new HashMap<>();
 
@@ -102,6 +117,7 @@ public class Lexer {
         keywords.put("else", TokenType.ELSE);
         keywords.put("for", TokenType.FOR);
         keywords.put("while", TokenType.WHILE);
+        keywords.put("print",TokenType.PRINT);
     }
 
     private char advance() {
@@ -138,5 +154,22 @@ public class Lexer {
         String text = source.substring(start, current);
         tokens.add(new Token(type, text, line, literal));
     }
+    private Token string() {
+        while (peek() != '"' && !isAtEnd()) {
+            advance();
+        }
+
+        if (isAtEnd()) {
+            throw new RuntimeException("Unterminated string.");
+        }
+
+        // closing "
+        advance();
+
+        // trim the surrounding quotes
+        String value = source.substring(start + 1, current - 1);
+        return new Token(TokenType.STRING, value, line);
+    }
+
 
 }

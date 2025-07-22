@@ -75,7 +75,12 @@ public class Interpreter implements Expr.Visitor<Object> , Stmt.Visitor<Void> {
         return null;
     }
 
-
+    @Override
+    public Void visitPrintStmt(Stmt.PrintStmt stmt) {
+        Object expression=evaluate(stmt.expression);
+        System.out.println(expression);
+        return null;
+    }
 
 
     private boolean isTruthy(Object result) {
@@ -136,6 +141,10 @@ public class Interpreter implements Expr.Visitor<Object> , Stmt.Visitor<Void> {
             case LESS:
                 checkNumberOperands(expr.operator, left, right);
                 return (double) left < (double) right;
+
+            case MODULO:
+                return (double) left % (double) right;
+
 
         }
 

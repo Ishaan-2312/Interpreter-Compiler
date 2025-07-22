@@ -78,7 +78,7 @@ public class ExprParser {
     private Expr multiplication() {
         Expr expr = primary();
 
-        while (match(TokenType.STAR, TokenType.SLASH)) {
+        while (match(TokenType.STAR, TokenType.SLASH, TokenType.MODULO)) {
             Token operator = previous();
             Expr right = primary();
             expr = new Expr.Binary(expr, operator, right);
@@ -86,6 +86,7 @@ public class ExprParser {
 
         return expr;
     }
+
 
     private Expr primary() {
         if (match(TokenType.NUMBER)) {
