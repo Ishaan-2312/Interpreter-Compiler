@@ -32,7 +32,7 @@ public class ExprParser {
     }
 
     private Expr assignment() {
-        Expr expr = comparison(); // first parse the left side
+        Expr expr = equality();  // first parse the left side
 
         if (match(TokenType.EQUAL)) {
             Token equals = previous();
@@ -68,6 +68,18 @@ public class ExprParser {
         while (match(TokenType.GREATER, TokenType.LESS)) {
             Token operator = previous();
             Expr right = addition();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    private Expr equality() {
+        Expr expr = comparison();
+
+        while (match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL)) {
+            Token operator = previous();
+            Expr right = comparison();
             expr = new Expr.Binary(expr, operator, right);
         }
 

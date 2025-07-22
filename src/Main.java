@@ -15,24 +15,13 @@ import Interpreter.Interpreter;
 
 public class Main {
     public static void main(String[] args) {
-        String source =
-                "var a = 5;\n" +
-                        "var b = 0;\n" +
-                        "\n" +
-                        "for (var i = 0; i < 3; i = i + 1) {\n" +
-                        "  b = b + i;\n" +
-                        "}\n" +
-                        "\n" +
-                        "while (b < 10) {\n" +
-                        "  b = b + 1;\n" +
-                        "}\n" +
-                        "\n" +
-                        "if (b > 9) {\n" +
-                        "  print(b);\n" +
-                        "} else {\n" +
-                        "  print(0);\n" +
-                        "}";
-
+        String source="var a = 10;\n" +
+                "var b = 10;\n" +
+                "if (a == b) {\n" +
+                "    print(1);\n" +
+                "} else {\n" +
+                "    print(0);\n" +
+                "}\n";
 
 
 

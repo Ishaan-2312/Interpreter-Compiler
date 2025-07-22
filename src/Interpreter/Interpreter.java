@@ -144,12 +144,24 @@ public class Interpreter implements Expr.Visitor<Object> , Stmt.Visitor<Void> {
 
             case MODULO:
                 return (double) left % (double) right;
+            case EQUAL_EQUAL:
+                return isEqual(left, right);
+            case BANG_EQUAL:
+                return !isEqual(left, right);
+
 
 
         }
 
         return null;
     }
+
+    private boolean isEqual(Object a, Object b) {
+        if (a == null && b == null) return true;
+        if (a == null) return false;
+        return a.equals(b);
+    }
+
 
     private void checkNumberOperands(Token operator, Object left, Object right) {
         if (left instanceof Double && right instanceof Double) return;

@@ -28,6 +28,7 @@ public class Lexer {
         singleCharTokens.put('%',TokenType.MODULO);
 
 
+
     }
 
     public Lexer(String source) {
@@ -70,6 +71,21 @@ public class Lexer {
                 addToken(TokenType.LESS);
                 break;
             case '"': string(); break;
+            case '=':
+                addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
+                break;
+
+
+
+            case '!':
+                if (match('=')) {
+                    addToken(TokenType.BANG_EQUAL);
+                } else {
+                    throw new RuntimeException("Unexpected character '!'");
+                }
+                break;
+
+
 
             default:
                 if (isDigit(c)) {
@@ -84,6 +100,16 @@ public class Lexer {
                 }
         }
     }
+
+    private boolean match(char expected) {
+        if (isAtEnd()) return false;
+        if (source.charAt(current) != expected) return false;
+
+        current++;
+        return true;
+    }
+
+
 
     private void number() {
         while (!isAtEnd() && isDigit(peek())) advance();

@@ -14,6 +14,7 @@ public enum TokenType {
     //Conditionals
     GREATER,
     LESS,
+    EQUAL_EQUAL,BANG_EQUAL,
 
     //Print
     PRINT,
